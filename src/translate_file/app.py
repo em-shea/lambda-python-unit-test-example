@@ -18,8 +18,16 @@ def lambda_handler(event, context):
     print(bucket_name, key_name)
 
     if key_name.endswith('.txt'):
-        original_text = read_file(bucket_name, key_name)
-        translated_text = translate_text(original_text)
+        try:
+            original_text = read_file(bucket_name, key_name)
+        except Exception as e:
+            print(e)
+            return f"Failed to read file - {e}"
+        try: 
+            translated_text = translate_text(original_text)
+        except Exception as e:
+            print(e)
+            return f"Failed to translate text - {e}"
     else:
         return "Invalid file type. File must have .txt extension."
 
@@ -29,16 +37,13 @@ def read_file(bucket_name, key_name):
 
     s3_file = s3_client.get_object(Bucket=bucket_name, Key=key_name)
     s3_file_content = s3_file['Body'].read().decode('utf-8')
-    print(s3_file_content)
-    json_content = json.loads(s3_file_content)
-    print(json_content)
 
-    return json_content
+    return s3_file_content
 
 def translate_text(original_text):
 
     response = translate_client.translate_text(
-        Text='string',
+        Text=original_text,
         # Auto detect source language will call Amazon Comprehend to detect language
         SourceLanguageCode='auto',
         # Find other Translate language codes here: 
