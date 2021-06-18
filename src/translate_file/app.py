@@ -15,6 +15,7 @@ def lambda_handler(event, context):
     print(event)
     bucket_name = event['Records'][0]['s3']['bucket']['name']
     key_name = event['Records'][0]['s3']['object']['key']
+    print(bucket_name, key_name)
 
     original_file = validate_and_retrieve_file(bucket_name, key_name)
 
