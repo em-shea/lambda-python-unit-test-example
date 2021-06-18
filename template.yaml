@@ -9,6 +9,7 @@ Resources:
       FunctionName: TranslateFile
       Handler: app.lambda_handler
       Runtime: python3.7
+      CodeUri: src/translate_file
       Description: A Lambda function that translates text file contents.
       Timeout: 120
       Policies:
