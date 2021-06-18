@@ -13,9 +13,10 @@ Resources:
       Description: A Lambda function that translates text file contents.
       Timeout: 120
       Policies:
-        # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-policy-templates.html
-        # - S3ReadPolicy:
-        #     BucketName: !Ref FileBucket
+        - S3ReadPolicy:
+            # Need to specify bucket name like this to avoid a circular dependency
+            # More details: https://aws.amazon.com/blogs/infrastructure-and-automation/handling-circular-dependency-errors-in-aws-cloudformation/
+            BucketName: !Sub "arn:aws:s3:::translate-file-bucket-${AWS::AccountId}"
         - Statement:
           - Sid: TranslateText
             Effect: Allow
@@ -32,3 +33,5 @@ Resources:
 
   FileBucket:
     Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "translate-file-bucket-${AWS::AccountId}"
