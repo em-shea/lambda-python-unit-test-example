@@ -51,4 +51,11 @@ def translate_text(original_text):
         TargetLanguageCode='en'
     )
 
-    return response
+    parsed_response = {
+        'original_text': original_text,
+        'translated_text': response['TranslatedText'],
+        'original_language': response['SourceLanguageCode'],
+        'target_language': response['TargetLanguageCode']
+    }
+
+    return parsed_response
