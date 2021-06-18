@@ -16,7 +16,7 @@ Resources:
         - S3ReadPolicy:
             # Need to specify bucket name to avoid a circular dependency
             # More details: https://aws.amazon.com/blogs/infrastructure-and-automation/handling-circular-dependency-errors-in-aws-cloudformation/
-            BucketName: !Sub "arn:aws:s3:::translate-file-bucket-${AWS::AccountId}"
+            BucketName: !Sub "translate-file-bucket-${AWS::AccountId}"
         - Statement:
           - Sid: TranslateText
             Effect: Allow
