@@ -1,0 +1,32 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            sudo pip install awscli
+            sudo pip install aws-sam-cli
+            sudo pip install coverage
+
+      - run:
+          name: Run tests
+          working_directory: src/tests/unit
+          command: coverage run -m unittest discover
+        
+      - run:
+          name: Run coverage report
+          working_directory: src/tests/unit
+          command: coverage report -m
+
+      - run: 
+          name: Deploy with SAM
+          command: |
+            sam build && sam package --s3-bucket unit-test-example --output-template-file packaged-template.yaml --region us-east-1
+
+            sam deploy --template-file ./packaged-template.yaml --stack-name unit-test-example --region us-east-1 --capabilities CAPABILITY_IAM

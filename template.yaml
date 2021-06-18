@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An example application that translates text file contents.
+
+Resources:
+  TranslateFileFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: TranslateFile
+      Handler: app.lambda_handler
+      Runtime: python3.7
+      Description: A Lambda function that translates text file contents.
+      Timeout: 120
+      Policies:
+        - Statement:
+          - Sid: TranslateText
+            Effect: Allow
+            Action:
+            - translate:TranslateText
+            - comprehend:DetectDominantLanguage
+            Resource: '*'
+      Events:
+        FileUploadedEvent:
+          Type: S3
+          Properties:
+            Bucket: !Ref FileBucket
+            Events: s3:ObjectCreated:*
+
+  FileBucket:
+    Type: AWS::S3::Bucket
