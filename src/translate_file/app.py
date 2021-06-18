@@ -31,6 +31,7 @@ def lambda_handler(event, context):
     else:
         return "Invalid file type. File must have .txt extension."
 
+    print(translated_text)
     return translated_text
 
 def read_file(bucket_name, key_name):
