@@ -1,14 +1,13 @@
+# Need to append path to run tests on function code in a different directory
 import sys
 sys.path.insert(0, '/opt')
 
-import os
-import json
 import boto3
 from botocore import translate
 
 # region_name specified in order to mock in unit tests
-s3_client = boto3.client('s3', region_name=os.environ['AWS_REGION'])
-translate_client = boto3.client('translate', region_name=os.environ['AWS_REGION'])
+s3_client = boto3.client('s3')
+translate_client = boto3.client('translate')
 
 def lambda_handler(event, context):
 

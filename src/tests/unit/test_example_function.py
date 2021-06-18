@@ -1,13 +1,10 @@
+# Need to append path to run tests on function code in a different directory
 import sys
 sys.path.append('../../')
 
-import os
-import json
 import unittest
 from unittest import mock
-
-with mock.patch.dict('os.environ', {'AWS_REGION': 'us-east-1'}):
-  from translate_file.app import lambda_handler
+from translate_file.app import lambda_handler
 
 # Mock call to S3 to read file
 def mocked_read_file(bucket_name, key_name):
