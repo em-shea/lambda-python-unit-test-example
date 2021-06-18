@@ -13,6 +13,9 @@ Resources:
       Description: A Lambda function that translates text file contents.
       Timeout: 120
       Policies:
+        # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-policy-templates.html
+        - S3ReadPolicy:
+            BucketName: !Ref FileBucket
         - Statement:
           - Sid: TranslateText
             Effect: Allow

@@ -13,8 +13,10 @@ translate_client = boto3.client('translate', region_name=os.environ['AWS_REGION'
 def lambda_handler(event, context):
 
     print(event)
+    bucket_name = event['Records'][0]['s3']['bucket']['name']
+    key_name = event['Records'][0]['s3']['object']['key']
 
-    original_file = validate_and_retrieve_file(event)
+    original_file = validate_and_retrieve_file(bucket_name, key_name)
 
     if original_file == "invalid file type":
         return "Invalid file type. A .txt file is required."
@@ -23,13 +25,14 @@ def lambda_handler(event, context):
 
     return translated_text
 
-def validate_and_retrieve_file(event):
+def validate_and_retrieve_file(bucket_name, key_name):
 
-    s3_file = s3_client.get_object(Bucket=bucket_name, Key=file_name)
+    s3_file = s3_client.get_object(Bucket=bucket_name, Key=key_name)
 
     if s3_file.endswith('.txt'):
         s3_file_content = s3_file['Body'].read().decode('utf-8')
         json_content = json.loads(s3_file_content)
+        print(json_content)
         return json_content
     else:
         return "invalid file type"
