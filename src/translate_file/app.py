@@ -1,5 +1,5 @@
-# import sys
-# sys.path.insert(0, '/opt')
+import sys
+sys.path.insert(0, '/opt')
 
 import os
 import json
@@ -17,28 +17,25 @@ def lambda_handler(event, context):
     key_name = event['Records'][0]['s3']['object']['key']
     print(bucket_name, key_name)
 
-    original_file = validate_and_retrieve_file(bucket_name, key_name)
-
-    if original_file == "invalid file type":
-        return "Invalid file type. A .txt file is required."
+    if key_name.endswith('.txt'):
+        original_text = read_file(bucket_name, key_name)
+        translated_text = translate_text(original_text)
     else:
-        translated_text = translate_file(event)
+        return "Invalid file type. File must have .txt extension."
 
     return translated_text
 
-def validate_and_retrieve_file(bucket_name, key_name):
+def read_file(bucket_name, key_name):
 
     s3_file = s3_client.get_object(Bucket=bucket_name, Key=key_name)
+    s3_file_content = s3_file['Body'].read().decode('utf-8')
+    print(s3_file_content)
+    json_content = json.loads(s3_file_content)
+    print(json_content)
 
-    if s3_file.endswith('.txt'):
-        s3_file_content = s3_file['Body'].read().decode('utf-8')
-        json_content = json.loads(s3_file_content)
-        print(json_content)
-        return json_content
-    else:
-        return "invalid file type"
+    return json_content
 
-def translate_file(event):
+def translate_text(original_text):
 
     response = translate_client.translate_text(
         Text='string',
