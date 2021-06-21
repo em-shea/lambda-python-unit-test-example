@@ -16,7 +16,7 @@ jobs:
       - run:
           name: Run tests
           working_directory: src/tests/unit
-          command: -m unittest discover
+          command: python3 -m unittest discover
         
       - run: 
           name: Deploy with SAM
