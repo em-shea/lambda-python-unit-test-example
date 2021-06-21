@@ -12,7 +12,6 @@ jobs:
           command: |
             sudo pip install awscli
             sudo pip install aws-sam-cli
-            sudo pip install unittest
 
       - run:
           name: Run tests
