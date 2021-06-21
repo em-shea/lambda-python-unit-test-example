@@ -4,7 +4,9 @@ sys.path.append('../../')
 
 import unittest
 from unittest import mock
-from translate_file.app import lambda_handler
+
+with mock.patch.dict('os.environ', {'AWS_REGION': 'us-east-1'}):
+    from translate_file.app import lambda_handler
 
 # Mock call to S3 to read file
 def mocked_read_file(bucket_name, key_name):

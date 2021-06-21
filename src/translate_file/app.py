@@ -1,8 +1,8 @@
+import os
 import boto3
-from botocore import translate
 
-s3_client = boto3.client('s3')
-translate_client = boto3.client('translate')
+s3_client = boto3.client('s3', region_name=os.environ['AWS_REGION'])
+translate_client = boto3.client('translate', region_name=os.environ['AWS_REGION'])
 
 def lambda_handler(event, context):
 
