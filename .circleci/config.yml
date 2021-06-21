@@ -12,18 +12,13 @@ jobs:
           command: |
             sudo pip install awscli
             sudo pip install aws-sam-cli
-            sudo pip install coverage
+            sudo pip install unittest
 
       - run:
           name: Run tests
           working_directory: src/tests/unit
-          command: coverage run -m unittest discover
+          command: -m unittest discover
         
-      - run:
-          name: Run coverage report
-          working_directory: src/tests/unit
-          command: coverage report -m
-
       - run: 
           name: Deploy with SAM
           command: |
