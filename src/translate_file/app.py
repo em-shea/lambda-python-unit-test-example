@@ -1,12 +1,15 @@
 import os
 import boto3
 
+# Explicitly specifying where the default AWS region is found 
+# (as an environment variable) to be able to mock it in the test
 s3_client = boto3.client('s3', region_name=os.environ['AWS_REGION'])
 translate_client = boto3.client('translate', region_name=os.environ['AWS_REGION'])
 
 def lambda_handler(event, context):
 
     print(event)
+
     # Get S3 bucket and key name from the event
     bucket_name = event['Records'][0]['s3']['bucket']['name']
     key_name = event['Records'][0]['s3']['object']['key']

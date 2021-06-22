@@ -1,10 +1,12 @@
-# Need to append path to run tests on function code in a different directory
+# Appending the src/ directory to the path
+# in order to run tests on function code in a different directory
 import sys
 sys.path.append('../../')
 
 import unittest
 from unittest import mock
 
+# Setting the default AWS region environment variable required by the Python SDK boto3
 with mock.patch.dict('os.environ', {'AWS_REGION': 'us-east-1'}):
     from translate_file.app import lambda_handler
 
@@ -12,9 +14,14 @@ with mock.patch.dict('os.environ', {'AWS_REGION': 'us-east-1'}):
 def mocked_read_file(bucket_name, key_name):
     return "我爱写单元测试！"
 
-# Mock call to Translate to translate text
+# Mock call to Translate to translate file text
 def mocked_translate_text(original_text):
-    return {'original_text': '我爱写单元测试！', 'translated_text': 'I love writing unit tests!', 'original_language': 'zh', 'target_language': 'en'}
+    return {
+        "original_text":"我爱写单元测试！",
+        "translated_text":"I love writing unit tests!",
+        "original_language":"zh",
+        "target_language":"en"
+    }
 
 class TranslateFileTest(unittest.TestCase):
 
