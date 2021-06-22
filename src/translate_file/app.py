@@ -21,14 +21,23 @@ def lambda_handler(event, context):
             original_text = read_file(bucket_name, key_name)
         except Exception as e:
             print(e)
-            return f"Failed to read file - {e}"
+            return {
+                "success": False,
+                "response": f"Failed to read file - {e}"
+            }
         try: 
             translated_text = translate_text(original_text)
         except Exception as e:
             print(e)
-            return f"Failed to translate text - {e}"
+            return {
+                "success": False,
+                "response": f"Failed to translate text - {e}"
+            }
     else:
-        return "Invalid file type. File must have .txt extension."
+        return {
+            "success": False,
+            "response": "Invalid file type. File must have .txt extension."
+        }
 
     print(translated_text)
     return translated_text
@@ -52,6 +61,7 @@ def translate_text(original_text):
     )
 
     parsed_response = {
+        'success': True,
         'original_text': original_text,
         'translated_text': response['TranslatedText'],
         'original_language': response['SourceLanguageCode'],

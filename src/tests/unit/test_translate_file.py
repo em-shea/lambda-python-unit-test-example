@@ -17,6 +17,7 @@ def mocked_read_file(bucket_name, key_name):
 # Mock call to Translate to translate file text
 def mocked_translate_text(original_text):
     return {
+        "success": True,
         "original_text":"我爱写单元测试！",
         "translated_text":"I love writing unit tests!",
         "original_language":"zh",
@@ -30,9 +31,14 @@ class TranslateFileTest(unittest.TestCase):
     @mock.patch('translate_file.app.translate_text', side_effect=mocked_translate_text)
     def test_valid_file(self, translate_text_mock, read_file_mock):
 
-        file_type = "valid file"
-        response = lambda_handler(self.s3_upload_event(file_type), "")
-        expected_response = {'original_text': '我爱写单元测试！', 'translated_text': 'I love writing unit tests!', 'original_language': 'zh', 'target_language': 'en'}
+        response = lambda_handler(self.s3_upload_event("valid_file.txt"), "")
+        expected_response = {
+            "success": True,
+            "original_text":"我爱写单元测试！",
+            "translated_text":"I love writing unit tests!",
+            "original_language":"zh",
+            "target_language":"en"
+        }
 
         self.assertEqual(read_file_mock.call_count, 1)
         self.assertEqual(translate_text_mock.call_count, 1)
@@ -43,20 +49,18 @@ class TranslateFileTest(unittest.TestCase):
     @mock.patch('translate_file.app.translate_text', side_effect=mocked_translate_text)
     def test_invalid_file(self, translate_text_mock, read_file_mock):
 
-        file_type = "invalid file"
-        response = lambda_handler(self.s3_upload_event(file_type), "")
-        expected_response = "Invalid file type. File must have .txt extension."
+        response = lambda_handler(self.s3_upload_event("invalid_file.pdf"), "")
+        expected_response = {
+            "success": False,
+            "response": "Invalid file type. File must have .txt extension."
+        }
 
         self.assertEqual(read_file_mock.call_count, 0)
         self.assertEqual(translate_text_mock.call_count, 0)
         self.assertEqual(response, expected_response)
 
     # Mock S3 new file uploaded event
-    def s3_upload_event(self, file_type):
-        if file_type == "valid file":
-            file_name = "test-file.txt"
-        if file_type == "invalid file":
-            file_name = "test-file.pdf"
+    def s3_upload_event(self, file_name):
 
         return {
             "Records":[
