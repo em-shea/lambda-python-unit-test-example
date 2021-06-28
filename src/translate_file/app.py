@@ -7,7 +7,6 @@ s3_client = boto3.client('s3', region_name=os.environ['AWS_REGION'])
 translate_client = boto3.client('translate', region_name=os.environ['AWS_REGION'])
 
 def lambda_handler(event, context):
-
     print(event)
 
     # Get S3 bucket and key name from the event
