@@ -1,8 +1,3 @@
-# Appending the src/ directory to the path
-# in order to run tests on function code in a different directory
-import sys
-sys.path.append('../../')
-
 import unittest
 from unittest import mock
 
@@ -43,7 +38,7 @@ class TranslateFileTest(unittest.TestCase):
         self.assertEqual(read_file_mock.call_count, 1)
         self.assertEqual(translate_text_mock.call_count, 1)
         self.assertEqual(response, expected_response)
-    
+
     # Test for invalid file type (.pdf)
     @mock.patch('translate_file.app.read_file', side_effect=mocked_read_file)
     @mock.patch('translate_file.app.translate_text', side_effect=mocked_translate_text)
