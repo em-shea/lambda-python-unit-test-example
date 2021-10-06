@@ -15,7 +15,7 @@ jobs:
 
       - run:
           name: Run tests
-          working_directory: src/tests/unit
+          working_directory: src/
           command: python3 -m unittest discover
         
       - run: 
